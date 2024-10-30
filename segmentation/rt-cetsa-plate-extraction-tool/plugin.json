@@ -1,0 +1,58 @@
+{
+  "name": "RT-CETSA Plate Extraction",
+  "version": "0.2.0-dev0",
+  "title": "RT-CETSA Plate Extraction",
+  "description": "Run regression analysis for the RT-CETSA pipeline.",
+  "author": "Nicholas Schaub (nick.schaub@nih.gov),Antoine Gerardin (antoine.gerardin@nih.gov), Najib Ishaq (najib.ishaq@nih.gov)",
+  "institution": "National Center for Advancing Translational Sciences, National Institutes of Health",
+  "repository": "https://github.com/PolusAI/image-tools",
+  "website": "https://ncats.nih.gov/preclinical/core/informatics",
+  "citation": "",
+  "containerId": "polusai/rt-cetsa-plate-extraction-tool:0.2.0-dev0",
+  "baseCommand": [
+    "python3",
+    "-m",
+    "polus.images.segmentation.rt_cetsa_plate_extraction"
+  ],
+  "inputs": [
+    {
+      "name": "inpDir",
+      "type": "genericData",
+      "description": "Input directory containing the plate images",
+      "required": true
+    },
+    {
+      "name": "filePattern",
+      "type": "string",
+      "description": "File Pattern to parse input files",
+      "default": ".+",
+      "required": false
+    },
+    {
+      "name": "preview",
+      "type": "boolean",
+      "description": "Generate preview of outputs.",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "outDir",
+      "type": "genericData",
+      "description": "Output data collection"
+    }
+  ],
+  "ui": [
+    {
+      "key": "inputs.inpDir",
+      "title": "Input collection",
+      "description": "Input data collection to be processed by this plugin"
+    },
+    {
+      "key": "inputs.filePattern",
+      "title": "filePattern",
+      "description": "File Pattern to parse input files",
+      "default": ".+"
+    }
+  ]
+}

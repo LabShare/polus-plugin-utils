@@ -1,0 +1,85 @@
+{
+  "name": "RT-CETSA Intensity Extraction",
+  "version": "0.2.0-dev0",
+  "title": "RT-CETSA Intensity Extraction",
+  "description": "Extract well intensities from RT-CETSA images and masks.",
+  "author": "Nicholas Schaub (nick.schaub@nih.gov), Antoine Gerardin (antoine.gerardin@nih.gov), Najib Ishaq (najib.ishaq@nih.gov)",
+  "institution": "National Center for Advancing Translational Sciences, National Institutes of Health",
+  "repository": "https://github.com/PolusAI/image-tools",
+  "website": "https://ncats.nih.gov/preclinical/core/informatics",
+  "citation": "",
+  "containerId": "polusai/rt-cetsa-intensity-extraction-tool:0.2.0-dev0",
+  "baseCommand": [
+    "python3",
+    "-m",
+    "polus.images.features.rt_cetsa_intensity_extraction"
+  ],
+  "inputs": [
+    {
+      "name": "inpDir",
+      "type": "genericData",
+      "description": "RT_Cetsa image collection to be processed by this tool.",
+      "required": true
+    },
+    {
+      "name": "filePattern",
+      "type": "string",
+      "description": "filePattern to parse input files.",
+      "default": ".+",
+      "required": false
+    },
+    {
+      "name": "preview",
+      "type": "boolean",
+      "description": "Generate preview of outputs.",
+      "required": false
+    },
+    {
+      "name": "params",
+      "type": "boolean",
+      "description": "Plate params to use.",
+      "required": false
+    },
+    {
+      "name": "temp",
+      "type": "boolean",
+      "description": "Temperature range. Default to [37,90].",
+      "required": false
+    }
+  ],
+  "outputs": [
+    {
+      "name": "outDir",
+      "type": "genericData",
+      "description": "Output data collection."
+    }
+  ],
+  "ui": [
+    {
+      "key": "inputs.inpDir",
+      "title": "Input collection",
+      "description": "Input data collection to be processed by this plugin."
+    },
+    {
+      "key": "inputs.mask",
+      "title": "Mask",
+      "description": "Mask to process plate image."
+    },
+    {
+      "key": "inputs.filePattern",
+      "title": "FilePattern",
+      "description": "File Pattern to parse input files.",
+      "default": ".+"
+    },
+    {
+      "name": "inputs.params",
+      "title": "Params",
+      "description": "Plate params to use."
+    },
+    {
+      "name": "inputs.temp",
+      "title": "Temp",
+      "description": "Temperature range. Default to [37,90]."
+    }
+  ]
+}

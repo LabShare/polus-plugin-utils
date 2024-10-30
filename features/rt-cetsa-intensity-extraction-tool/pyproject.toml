@@ -1,0 +1,85 @@
+[tool.poetry]
+name = "polus_images_features_rt_cetsa_intensity_extraction"
+version = "0.2.0-dev0"
+description = "Extract well intensities from RT-CETSA plate images."
+authors = [
+    "Nick Schaub <nick.schaub@nih.gov>",
+    "Antoine Gerardin <antoine.gerardin@nih.gov>",
+    "Najib Ishaq <najib.ishaq@nih.gov>",
+]
+readme = "README.md"
+packages = [{include = "polus", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.12"
+typer = "^0.7.0"
+filepattern = "^2.0.5"
+pandas = "^2.2.2"
+numpy = "^1.26.4"
+bfio = "^2.3.6"
+scikit-image = "^0.22.0"
+imagecodecs = "^2024.1.1"
+polus-images-segmentation-rt-cetsa-plate-extraction = {git = "https://github.com/agerardin/image-tools.git", branch = "feat/rt_cetsa", subdirectory = "segmentation/rt-cetsa-plate-extraction-tool"}
+
+
+[tool.poetry.group.dev.dependencies]
+bump2version = "^1.0.1"
+pre-commit = "^3.1.0"
+pytest = "^7.2.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+extend = "../../ruff.toml"
+extend-ignore = [
+    "RET505",  # Unnecessary `else` after `return` statement
+    "E501",  # Line too long
+    "ANN001",  # Missing type annotation
+    "D102",  # Missing docstring in public method
+    "ANN201",  # Missing return type annotation
+    "N806",  # Variable in function should be lowercase
+    "D205",  # 1 blank line required between summary line and description
+    "N803",  # Argument name should be lowercase
+    "PLR0913",  # Too many arguments
+    "D415",  # First line should end with a period, question mark, or exclamation point
+    "PLR2004",  # Magic value used in comparison
+    "B006",  # Do not use mutable default arguments
+    "D107",  # Missing docstring
+    "D101",  # Missing docstring
+    "E731",  # Do not assign a lambda expression, use a def
+    "E402",  # Module level import not at top of file
+    "PTH123",  # `open()` should be replaced with `Path.open()`
+    "PTH118",  # `os.path.join()` should be replaced with `/` operator
+    "PTH100",  # `os.path.abspath()` should be replaced with `Path.resolve()`
+    "PLR0915",  # Too many statements
+    "PLR0912",  # Too many branches
+    "C901",  # Function is too complex
+    "T201",  # `print` used
+    "E722",  # Do not use bare 'except'
+    "B904",  # Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
+    "ANN202",  # Missing return type annotation for private function
+    "ARG002",  # Unused method argument
+    "N802",  # Function name should be lowercase
+    "PTH103",  # `os.makedirs()` should be replaced with `Path.mkdir(parents=True)`
+    "ANN003",  # Missing type annotation for `**kwargs`
+    "B007",  # Loop control variable not used within the loop body
+    "ANN204",  # Missing return type annotation for magic method
+    "D417",  # Missing argument descriptions in the docstring
+    "ANN205",  # Missing return type annotation for static method
+    "PLR5501",  # Use `elif` instead of `else` following `if` condition to avoid unnecessary indentation
+    "EM102",  # Exception must not use an f-string literal
+    "D414",  # Section has no content
+    "RUF012",  # Mutable class attributes should be annotated with `typing.ClassVar`
+    "A001",  # Variable `input` is shadowing a Python builtin
+    "A002",  # Argument `input` is shadowing a Python builtin
+    "E741",  # Ambiguous variable name: `l`
+    "PTH120",  # `os.path.dirname()` should be replaced by `Path.parent`
+    "N816",  # Variable `cfFilename` in global scope should not be mixedCase
+    "PTH109",  # `os.getcwd()` should be replaced by `Path.cwd()`
+    "ARG001",  # Unused function argument
+    "S101",  # Use of assert detected
+    "D103",  # Missing docstring in public function
+    "D100",  # Missing docstring in public module
+]
