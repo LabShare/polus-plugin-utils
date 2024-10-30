@@ -1,1 +1,0 @@
-"""Rxiv Download Plugin."""

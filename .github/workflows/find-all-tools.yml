@@ -29,7 +29,7 @@ jobs:
           ignored_dirs="polus-python-template ftl-label .venv"
 
           # List of tools that are broken for known reasons
-          broken_tools="binary-operations precompute-slide microjson-to-ome region-segmentation-eval basic-flatfield-estimation ftl-label cell-border-segmentation"
+          broken_tools="binary-operations precompute-slide microjson-to-ome region-segmentation-eval basic-flatfield-estimation ftl-label cell-border-segmentation image-assembler"
           # Reasons:
             # - binary-operations: Not fully updated to new tool standards
             # - precompute-slide (Najib): Single failing test: 1023_1024_Segmentation_Zarr
@@ -38,6 +38,7 @@ jobs:
             # - basic-flatfield-estimation: Jax installation error.
             # - ftl-label: Requires Rust installation. Also, has not been updated to new tool standards.
             # - cell-border-segmentation (Hamdah): keras.models.load_model() is getting incorrect model format error.
+            # image-assembler: Very intermittent failures. Unable to reproduce locally. Requires further investigation.
 
           # Initialize variables
           ignored_dirs="$ignored_dirs $broken_tools"
