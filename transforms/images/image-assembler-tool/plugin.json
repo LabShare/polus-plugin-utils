@@ -1,6 +1,6 @@
 {
   "name": "Image Assembler",
-  "version": "1.4.2",
+  "version": "1.5.0-dev0",
   "title": "Image Assembler",
   "description": "A scalable image assembling plugin.",
   "author": "Nick Schaub (nick.schaub@nih.gov), Antoine Gerardin (antoine.gerardin@gmail.com)",
@@ -8,7 +8,7 @@
   "repository": "https://github.com/labshare/polus-plugins",
   "website": "https://ncats.nih.gov/preclinical/core/informatics",
   "citation": "",
-  "containerId": "polusai/image-assembler-tool:1.4.2",
+  "containerId": "polusai/image-assembler-tool:1.5.0-dev0",
   "baseCommand": [
     "python3",
     "-m",

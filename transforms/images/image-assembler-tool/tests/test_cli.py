@@ -82,4 +82,4 @@ def test_cli_bad_input(local_data: tuple[Path, Path, Path, Path]):
         ],
     )
 
-    assert result.exc_info[0] is ValueError
+    assert result.exc_info[0] is SystemExit

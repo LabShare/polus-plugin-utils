@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "polus-images-transforms-images-apply-flatfield"
-version = "2.0.1"
+version = "2.1.0-dev0"
 description = ""
 authors = [
     "Nick Schaub <nicholas.schaub@nih.gov>",
@@ -11,10 +11,10 @@ packages = [{include = "polus", from = "src"}]
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
-bfio = { version = "^2.3.3", extras = ["all"] }
+bfio = { version = "^2.4.3", extras = ["all"] }
 filepattern = "2.0.4"
 typer = { version = "^0.7.0", extras = ["all"] }
-numpy = "^1.24.3"
+numpy = "^2.0.0"
 tqdm = "^4.65.0"
 preadator = "0.4.0-dev2"
 

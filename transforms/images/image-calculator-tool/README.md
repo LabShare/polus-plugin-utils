@@ -1,4 +1,4 @@
-# Image Calculator (v0.2.2)
+# Image Calculator (v0.3.0-dev0)
 
 This plugin performs pixel-wise operations between two image collections.
 For example, images in one image collection can be subtracted from images in another collection.

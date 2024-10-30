@@ -1,7 +1,6 @@
 """Package entrypoint for Image Assembler."""
 import json
 import logging
-import typing
 from os import environ
 from pathlib import Path
 
@@ -38,7 +37,7 @@ def generate_preview(
         timeslice_naming,
     )
 
-    preview: dict[str, typing.Union[list, str]] = {
+    preview: dict[str, list[str]] = {
         "outputDir": [],
     }
 
@@ -57,18 +56,33 @@ def main(
         "-i",
         help="""Absolute path to the input image collection
         directory to be processed by this plugin.""",
+        exists=True,
+        file_okay=False,
+        dir_okay=True,
+        readable=True,
+        resolve_path=True,
     ),
     stitch_path: Path = typer.Option(
         ...,
         "--stitchPath",
         "-s",
         help="Absolute path to a stitching vector directory.",
+        exists=True,
+        file_okay=False,
+        dir_okay=True,
+        readable=True,
+        resolve_path=True,
     ),
     out_dir: Path = typer.Option(
         ...,
         "--outDir",
         "-o",
         help="Absolute path to the output collection directory.",
+        exists=True,
+        file_okay=False,
+        dir_okay=True,
+        writable=True,
+        resolve_path=True,
     ),
     timeslice_naming: bool = typer.Option(
         False,
@@ -88,18 +102,6 @@ def main(
     logger.info(f"stitchPath: {stitch_path}")
     logger.info(f"outDir: {out_dir}")
     logger.info(f"timesliceNaming: {timeslice_naming}")
-
-    if not img_path.exists():
-        msg = "imgPath does not exist"
-        raise ValueError(msg, img_path)
-
-    if not out_dir.exists():
-        msg = "outDir does not exist"
-        raise ValueError(msg, out_dir)
-
-    if not stitch_path.exists():
-        msg = "stitchPath does not exist"
-        raise ValueError(msg, stitch_path)
 
     # if the input image collection contains a images subdirectory, we use that
     # TODO this is an artifact from WIPP integration.

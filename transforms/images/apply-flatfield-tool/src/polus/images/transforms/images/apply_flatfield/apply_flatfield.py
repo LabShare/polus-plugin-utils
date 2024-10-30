@@ -134,7 +134,8 @@ def _unshade_batch(
     batch_paths: list[pathlib.Path],
     out_dir: pathlib.Path,
     ff_image: numpy.ndarray,
-    df_image: typing.Optional[numpy.ndarray] = None,
+    df_image: typing.Optional[numpy.ndarray],
+    dtype: numpy.dtype = numpy.float32,
 ) -> None:
     """Apply flatfield correction to a batch of images.
 
@@ -143,6 +144,7 @@ def _unshade_batch(
         out_dir: directory to save the corrected images
         ff_image: component to be used for flatfield correction
         df_image: component to be used for flatfield correction
+        dtype: data type to use for the corrected images
     """
     # Load images
     with preadator.ProcessManager(
@@ -160,11 +162,11 @@ def _unshade_batch(
         images = [f.result() for f in load_futures]
 
     images = [img for _, img in sorted(images, key=operator.itemgetter(0))]
-    img_stack = numpy.stack(images, axis=0).astype(numpy.float32)
+    img_stack = numpy.stack(images, axis=0).astype(dtype)
 
     # Apply flatfield correction
     if df_image is not None:
-        img_stack -= df_image
+        img_stack -= df_image.astype(dtype)
 
     img_stack /= ff_image + 1e-8
 

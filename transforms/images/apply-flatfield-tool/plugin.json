@@ -1,6 +1,6 @@
 {
   "name": "Apply Flatfield",
-  "version": "2.0.1",
+  "version": "2.1.0-dev0",
   "title": "Apply Flatfield",
   "description": "Apply a flatfield algorithm to a collection of images.",
   "author": "Nick Schaub (Nick.Schaub@nih.gov), Najib Ishaq (najib.ishaq@nih.gov)",
@@ -8,7 +8,7 @@
   "repository": "https://github.com/labshare/polus-plugins",
   "website": "https://ncats.nih.gov/preclinical/core/informatics",
   "citation": "",
-  "containerId": "polusai/apply-flatfield-tool:2.0.1",
+  "containerId": "polusai/apply-flatfield-tool:2.1.0-dev0",
   "baseCommand": [
     "python3",
     "-m",

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "polus-images-transforms-images-image-calculator"
-version = "0.2.2"
+version = "0.3.0-dev0"
 description = ""
 authors = [
     "Nicholas Schaub <nick.schaub@nih.gov>",
@@ -11,11 +11,12 @@ packages = [{include = "polus", from = "src"}]
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.12"
-bfio = {version = "2.3.3", extras = ["all"]}
-filepattern = "2.0.4"
+bfio = {version = "^2.4.3", extras = ["all"]}
+filepattern = "^2.0.7"
 typer = "^0.7.0"
 tqdm = "^4.65.0"
 preadator = "0.4.0.dev2"
+numpy = "^2.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.3"

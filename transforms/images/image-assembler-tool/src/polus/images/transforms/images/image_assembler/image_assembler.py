@@ -335,7 +335,7 @@ def assemble_chunk(
             chunk[
                 chunk_start_y : chunk_start_y + region_height,
                 chunk_start_x : chunk_start_x + region_width,
-            ] = data
+            ] = data.astype(bw.dtype)
 
     # completed chunk is written to disk
     # we only write what fits in the image since that the behavior bfio expects

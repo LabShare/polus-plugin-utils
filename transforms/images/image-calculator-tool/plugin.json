@@ -1,6 +1,6 @@
 {
   "name": "Image Calculator",
-  "version": "0.2.2",
+  "version": "0.3.0-dev0",
   "title": "Image Calculator",
   "description": "Perform simple mathematical operations on images.",
   "author": "Nick Schaub (nick.schaub@nih.gov)",
@@ -8,7 +8,7 @@
   "repository": "https://github.com/labshare/polus-plugins",
   "website": "https://ncats.nih.gov/preclinical/core/informatics",
   "citation": "",
-  "containerId": "polusai/image-calculator-tool:0.2.2",
+  "containerId": "polusai/image-calculator-tool:0.3.0-dev0",
   "baseCommand": [
     "python3",
     "-m",

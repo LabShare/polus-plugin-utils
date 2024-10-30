@@ -89,9 +89,11 @@ def _process_chunk(  # noqa: PLR0913
     operation: Operation,
 ) -> None:
     """Process on chunk of the images in a thread/process."""
+    left = primary_reader[y:y_max, x:x_max, z]
+    right = secondary_reader[y:y_max, x:x_max, z]
     writer[y:y_max, x:x_max, z] = operation.func()(
-        primary_reader[y:y_max, x:x_max, z],
-        secondary_reader[y:y_max, x:x_max, z],
+        left,
+        right.astype(primary_reader.dtype),
     )
 
 
@@ -121,6 +123,8 @@ def process_image(
 
         # Initialize the output image
         with bfio.BioWriter(out_path, metadata=primary_reader.metadata) as writer:
+            writer.dtype = primary_reader.dtype
+
             for z in range(primary_reader.Z):
                 for x in range(0, primary_reader.X, CHUNK_SIZE):
                     x_max = min(x + CHUNK_SIZE, primary_reader.X)
