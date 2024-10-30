@@ -1,2 +1,0 @@
-czifile==2019.7.2
-preadator==0.2.0

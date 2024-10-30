@@ -1,0 +1,23 @@
+# Jupyter Notebook
+.ipynb_checkpoints
+poetry.lock
+../../poetry.lock
+# Environments
+.env
+.myenv
+.venv
+env/
+venv/
+# test data directory
+data
+# yaml file
+.pre-commit-config.yaml
+# hidden files
+.DS_Store
+.ds_store
+# flake8
+.flake8
+../../.flake8
+__pycache__
+.mypy_cache
+requirements.txt

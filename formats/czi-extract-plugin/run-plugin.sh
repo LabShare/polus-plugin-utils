@@ -6,6 +6,8 @@ datapath=$(readlink --canonicalize ../data)
 # Inputs
 inpDir=/data/path_to_files
 
+filePattern=".*.czi"
+
 # Output paths
 outDir=/data/path_to_output
 
@@ -15,7 +17,7 @@ LOGLEVEL=INFO
 docker run --mount type=bind,source=${datapath},target=/data/ \
             --user $(id -u):$(id -g) \
             --env POLUS_LOG=${LOGLEVEL} \
-            labshare/polus-polus-czi-extract-plugin:${version} \
+            polusai/czi-extract-plugin:${version} \
             --inpDir ${inpDir} \
-            --outDir ${outDir} 
-            
+            --filePattern ${filePattern} \
+            --outDir ${outDir}

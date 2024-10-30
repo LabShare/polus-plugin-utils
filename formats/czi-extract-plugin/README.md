@@ -1,4 +1,4 @@
-# Polus CZI Extraction Plugin (v1.1.0)
+# Polus CZI Extraction Plugin (v1.1.2-dev)
 
 This WIPP plugin will import individual fields of view from a CZI file (will
 only import one scene or collection of images). Images are exported as tiled
@@ -39,19 +39,22 @@ the contents of `plugin.json` into the pop-up window and submit.
 
 ## Options
 
-This plugin takes one input argument and one output argument:
+This plugin takes two input arguments and one output argument:
 
 | Name     | Description             | I/O    | Type |
 | -------- | ----------------------- | ------ | ---- |
-| `inpDir` | Input image collection  | Input  | Path |
-| `outDir` | Output image collection | Output | List |
+| `--inpDir` | Input image collection  | Input  | genericData |
+| `--filePattern` | Pattern to parse image files  | Input  | string |
+| `--outDir` | Output image collection | Output | collection |
+| `--preview`        | Generate a JSON file with outputs                                  | Output | JSON          |
 
 ## Run the plugin
 
 ### Run the Docker Container
 
 ```bash
-docker run -v /path/to/data:/data polus-czi-extract-plugin \
+docker run -v /path/to/data:/data polusai/czi-extract-plugin:1.1.2-dev \
   --inpDir /data/input \
+  --filePattern ".*.czi" \
   --outDir /data/output
 ```

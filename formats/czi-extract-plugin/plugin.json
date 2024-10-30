@@ -1,0 +1,63 @@
+{
+  "name": "Czi Extraction",
+  "version": "1.1.2-dev",
+  "title": "Extract TIFFs From CZI",
+  "description": "Extracts individual fields of view from a CZI file. Saves as OME TIFF.",
+  "author": "Nick Schaub (nick.schaub@nih.gov), Hamdah Shafqat Abbasi (hamdahshafqat.abbasi@nih.gov)",
+  "institution": "National Center for Advancing Translational Sciences, National Institutes of Health",
+  "repository": "https://github.com/PolusAI/polus-plugins",
+  "website": "https://ncats.nih.gov/preclinical/core/informatics",
+  "containerId": "polusai/czi-extract-plugin:1.1.2-dev",
+  "baseCommand": [
+    "python3",
+    "-m",
+    "polus.plugins.formats.czi_extract"
+  ],
+  "inputs": {
+    "inpDir": {
+      "type": "collection",
+      "title": "Input collection",
+      "description": "Input image collection to be processed by this plugin.",
+      "required": "True"
+    },
+    "filePattern": {
+      "type": "string",
+      "title": "Filename pattern",
+      "description": "Filename pattern used to separate data.",
+      "required": "False"
+    },
+    "preview": {
+      "type": "boolean",
+      "title": "Preview",
+      "description": "Generate an output preview.",
+      "required": "False"
+    }
+  },
+  "outputs": {
+    "outDir": {
+      "type": "collection",
+      "description": "Output collection."
+    }
+  },
+  "ui": {
+    "inpDir": {
+      "type": "collection",
+      "title": "Input collection",
+      "description": "Input image collection to be processed by this plugin.",
+      "required": "True"
+    },
+    "filePattern": {
+      "type": "string",
+      "title": "Filename pattern",
+      "description": "Filename pattern used to separate data.",
+      "required": "False",
+      "default": ".*.czi"
+    },
+    "preview": {
+      "type": "boolean",
+      "title": "Preview example output of this plugin",
+      "description": "Generate an output preview.",
+      "required": "False"
+    }
+  }
+}
