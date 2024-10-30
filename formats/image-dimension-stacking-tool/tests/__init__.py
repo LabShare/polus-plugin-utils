@@ -1,1 +1,1 @@
-"""Image dimension stacking package."""
+"""Tests for the tool."""

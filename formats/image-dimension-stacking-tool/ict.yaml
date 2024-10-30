@@ -1,8 +1,9 @@
 author:
 - Nick Schaub
 - Hamdah Shafqat Abbasi
+- Najib Ishaq
 contact: nick.schaub@nih.gov
-container: polusai/image-dimension-stacking-tool:0.1.2
+container: polusai/image-dimension-stacking-tool:0.2.0-dev0
 description: Stacking of image dimensions (c, z, t) to create a multidimensional image.
 entrypoint: python3 -m polus.images.formats.image_dimension_stacking
 inputs:
@@ -16,6 +17,12 @@ inputs:
   format:
   - string
   name: filePattern
+  required: true
+  type: string
+- description: The axis to stack the images on. One of 'c', 'z', or 't'.
+  format:
+  - string
+  name: axis
   required: true
   type: string
 - description: Generate an output preview
@@ -44,8 +51,12 @@ ui:
   key: inputs.filePattern
   title: Filename pattern
   type: text
+- description: The axis to stack the images on. One of 'c', 'z', or 't'.
+  key: inputs.axis
+  title: Axis
+  type: text
 - description: Generate an output preview
   key: inputs.preview
   title: Generate preview
   type: boolean
-version: 0.1.2-dev0
+version: 0.2.0-dev0-dev0

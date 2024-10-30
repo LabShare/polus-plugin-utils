@@ -1,14 +1,17 @@
 """Image dimension stacking package."""
+
 import json
 import logging
+import os
+import pathlib
 import warnings
-from os import environ
-from pathlib import Path
-from typing import Any
 
-import filepattern as fp
-import polus.images.formats.image_dimension_stacking.dimension_stacking as st
+import filepattern
+import tqdm
 import typer
+from polus.images.formats.image_dimension_stacking import copy_stack
+from polus.images.formats.image_dimension_stacking import utils
+from polus.images.formats.image_dimension_stacking import write_stack
 
 warnings.filterwarnings("ignore")
 
@@ -16,95 +19,87 @@ logging.basicConfig(
     format="%(asctime)s - %(name)-8s - %(levelname)-8s - %(message)s",
     datefmt="%d-%b-%y %H:%M:%S",
 )
-POLUS_LOG = getattr(logging, environ.get("POLUS_LOG", "INFO"))
-logger = logging.getLogger("polus.plugins.formats.image_dimension_stacking")
+POLUS_LOG = getattr(logging, os.environ.get("POLUS_LOG", "INFO"))
+logger = logging.getLogger("polus.images.formats.image_dimension_stacking")
 logger.setLevel(POLUS_LOG)
-logging.getLogger("bfio").setLevel(POLUS_LOG)
 
-
-app = typer.Typer(help="Stack multi dimensional image into single image.")
-
-
-def generate_preview(out_dir: Path, file_pattern: str) -> None:
-    """Generate preview of the plugin outputs."""
-    with Path.open(Path(out_dir, "preview.json"), "w") as jfile:
-        out_json: dict[str, Any] = {
-            "filepattern": file_pattern,
-            "outDir": [],
-        }
-
-        fps = fp.FilePattern(out_dir, file_pattern)
-        out_name = fps.output_name()
-        out_json["outDir"].append(out_name)
-        json.dump(out_json, jfile, indent=2)
+app = typer.Typer()
 
 
 @app.command()
 def main(
-    inp_dir: Path = typer.Option(
+    inp_dir: pathlib.Path = typer.Option(
         ...,
         "--inpDir",
-        "-i",
         help="Path to input directory containing binary images.",
+        exists=True,
+        readable=True,
+        resolve_path=True,
+        file_okay=False,
+        dir_okay=True,
     ),
     file_pattern: str = typer.Option(
-        ".*",
+        ...,
         "--filePattern",
-        "-f",
         help="Filename pattern used to separate data.",
     ),
-    out_dir: Path = typer.Option(
+    axis: utils.StackableAxis = typer.Option(
+        utils.StackableAxis.Z,
+        "--axis",
+        help="Axis to stack images along.",
+    ),
+    out_dir: pathlib.Path = typer.Option(
         ...,
         "--outDir",
-        "-o",
         help="Output collection.",
+        exists=True,
+        writable=True,
+        resolve_path=True,
+        file_okay=False,
+        dir_okay=True,
     ),
     preview: bool = typer.Option(
         False,
         "--preview",
-        "-p",
         help="Generate preview of expected outputs.",
     ),
 ) -> None:
-    """Image dimension stacking plugin."""
-    logger.info(f"--inpDir: {inp_dir}")
-    logger.info(f"--filePattern: {file_pattern}")
-    logger.info(f"--outDir: {out_dir}")
+    """Image dimension stacking tool."""
+    # Get the file pattern
+    fp = filepattern.FilePattern(inp_dir, file_pattern)
+    variables = fp.get_variables()
 
-    if not inp_dir.exists():
-        msg = "inpDir does not exist"
-        raise ValueError(msg, inp_dir)
-
-    if not out_dir.exists():
-        msg = "outDir does not exist"
-        raise ValueError(msg, out_dir)
-
-    fps = fp.FilePattern(inp_dir, file_pattern)
-    list_val = ["c", "t", "z"]
-    variables = sorted([f for f in fps.get_variables() if f in list_val])
-
-    if len(variables) == 0:
-        msg = "Could not detect c, t or z variables in a pattern"
+    # Check if the axis is present among the variables
+    if axis.value not in variables:
+        msg = f"Axis {axis} not present among the variables {variables}."
+        logger.error(msg)
         raise ValueError(msg)
 
-    if variables == list_val or variables == ["z"]:
-        group_by = "z"
+    # Collect the files into groups to stack
+    groups: dict[pathlib.Path, list[pathlib.Path]] = {}
 
-    if variables == ["c", "t"] or variables == ["c"]:
-        group_by = "c"
-
-    if variables == ["t"]:
-        group_by = "t"
+    # Group the files by all variables except the axis
+    group_by = [v for v in variables if v != axis.value]
+    for _, files in fp(group_by=group_by):
+        out_path = out_dir / fp.output_name(files)
+        groups[out_path] = [p for _, [p] in files]
 
     if preview:
-        generate_preview(out_dir=out_dir, file_pattern=file_pattern)
+        with (out_dir / "preview.json").open("w") as f:
+            preview_data = {"outDir": [str(p) for p in groups]}
+            json.dump(preview_data, f, indent=2)
+        return
 
-    st.dimension_stacking(
-        inp_dir=inp_dir,
-        file_pattern=file_pattern,
-        group_by=group_by,
-        out_dir=out_dir,
-    )
+    # TODO: Use some parallelism here
+    for out_path, inp_paths in tqdm.tqdm(
+        groups.items(),
+        desc="Stacking groups",
+        total=len(groups),
+    ):
+        if str(out_path).endswith(".ome.zarr"):
+            copy_stack(inp_paths, axis, out_path)
+        else:
+            write_stack(inp_paths, axis, out_path)
 
 
 if __name__ == "__main__":
