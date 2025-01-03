@@ -1,0 +1,29 @@
+author:
+- David Liu
+contact: zhiyuan.liu@axleinfo.com
+container: polusai/ome-zarr-autosegmentation-plugin:0.1.0
+description: Takes in an OME-Zarr dataset and produces a second one with the same structure but of segmentations
+inputs:
+- description: Dataset input for the plugin.
+  format:
+  - genericData
+  name: input
+  required: true
+  type: path
+name: polusai/OMEZarrAutosegmentation
+outputs:
+- description: Output data for the plugin
+  format:
+  - collection
+  name: output
+  required: true
+  type: path
+repository: https://github.com/PolusAI/image-tools
+specVersion: 1.0.0
+title: OME-Zarr Autosegmentation
+ui:
+- description: Pick a collection...
+  key: inputs.input
+  title: 'OME-Zarr input dataset: '
+  type: path
+version: 0.1.0
