@@ -55,3 +55,4 @@ Command line options:
 | `--dfPattern`    | Filename pattern used to match darkfield files to image files         | Input  | string     |
 | `--outDir`       | Output collection                                                     | Output | collection |
 | `--preview`      | Preview the output images' names without actually running computation | Input  | boolean    |
+| `--keepOrigDtype`| Keep the original image data type if true                             | Input  | boolean    |

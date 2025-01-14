@@ -42,6 +42,12 @@ inputs:
   name: preview
   required: false
   type: boolean
+- description: Keep original image data type if true, otherwise convert to float
+  format:
+  - boolean
+  name: keepOrigDtype
+  required: false
+  type: boolean
 name: polusai/ApplyFlatfield
 outputs:
 - description: Output collection

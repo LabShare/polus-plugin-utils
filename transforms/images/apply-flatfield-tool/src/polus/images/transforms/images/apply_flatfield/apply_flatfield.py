@@ -7,6 +7,7 @@ import typing
 
 import bfio
 import numpy
+import numpy as np
 import preadator
 import tqdm
 from filepattern import FilePattern
@@ -26,7 +27,8 @@ def apply(  # noqa: PLR0913
     df_pattern: typing.Optional[str],
     out_dir: pathlib.Path,
     preview: bool = False,
-) -> list[pathlib.Path]:
+    keep_orig_dtype: typing.Optional[bool] = True,
+) -> typing.List[pathlib.Path]:
     """Run batch-wise flatfield correction on the image collection.
 
     Args:
@@ -41,6 +43,9 @@ def apply(  # noqa: PLR0913
         saved.
         preview: if True, return the paths to the images that would be saved
         without actually performing any other computation.
+        keep_orig_dtype: if True, the output images will be saved with the same
+        dtype as the input images. If False, the output images will be saved as
+        float32.
     """
     img_fp = FilePattern(str(img_dir), img_pattern)
     img_variables = img_fp.get_variables()
@@ -82,16 +87,17 @@ def apply(  # noqa: PLR0913
         if preview:
             out_files.extend(img_paths)
         else:
-            _unshade_images(img_paths, out_dir, ff_path, df_path)
+            _unshade_images(img_paths, out_dir, ff_path, df_path, keep_orig_dtype)
 
     return out_files
 
 
 def _unshade_images(
-    img_paths: list[pathlib.Path],
+    img_paths: typing.List[pathlib.Path],
     out_dir: pathlib.Path,
     ff_path: pathlib.Path,
     df_path: typing.Optional[pathlib.Path],
+    keep_orig_dtype: typing.Optional[bool] = True,
 ) -> None:
     """Remove the given flatfield components from all images and save outputs.
 
@@ -100,6 +106,9 @@ def _unshade_images(
         out_dir: directory to save the corrected images
         ff_path: path to the flatfield image
         df_path: path to the darkfield image
+        keep_orig_dtype: if True, the output images will be saved with the same
+        dtype as the input images. If False, the output images will be saved as
+        float32.
     """
     logger.info(f"Applying flatfield correction to {len(img_paths)} images ...")
     logger.info(f"{ff_path.name = } ...")
@@ -123,18 +132,16 @@ def _unshade_images(
         total=len(batch_indices) - 1,
     ):
         _unshade_batch(
-            img_paths[i_start:i_end],
-            out_dir,
-            ff_image,
-            df_image,
+            img_paths[i_start:i_end], out_dir, ff_image, df_image, keep_orig_dtype
         )
 
 
 def _unshade_batch(
-    batch_paths: list[pathlib.Path],
+    batch_paths: typing.List[pathlib.Path],
     out_dir: pathlib.Path,
     ff_image: numpy.ndarray,
     df_image: typing.Optional[numpy.ndarray] = None,
+    keep_orig_dtype: typing.Optional[bool] = True,
 ) -> None:
     """Apply flatfield correction to a batch of images.
 
@@ -143,6 +150,9 @@ def _unshade_batch(
         out_dir: directory to save the corrected images
         ff_image: component to be used for flatfield correction
         df_image: component to be used for flatfield correction
+        keep_orig_dtype: if True, the output images will be saved with the same
+        dtype as the input images. If False, the output images will be saved as
+        float32.
     """
     # Load images
     with preadator.ProcessManager(
@@ -162,11 +172,43 @@ def _unshade_batch(
     images = [img for _, img in sorted(images, key=operator.itemgetter(0))]
     img_stack = numpy.stack(images, axis=0).astype(numpy.float32)
 
+    # find min and max values of original images (across last 2 axes)
+    def get_min_max(img_stack):
+        min_val = img_stack.min(axis=(-1, -2), keepdims=True)
+        max_val = img_stack.max(axis=(-1, -2), keepdims=True)
+        return min_val, max_val
+
+    min_orig, max_orig = get_min_max(img_stack)  # dim: n_images x 1 x 1
+
     # Apply flatfield correction
     if df_image is not None:
         img_stack -= df_image
 
     img_stack /= ff_image + 1e-8
+
+    # calculate min and max values of corrected images
+    min_new, max_new = get_min_max(img_stack)
+
+    # scale corrected images to original range
+    img_stack = (img_stack - min_new) / (max_new - min_new) * (
+        max_orig - min_orig
+    ) + min_orig
+
+    if keep_orig_dtype:
+        orig_dtype = images[0].dtype
+        # if integer type
+        if np.issubdtype(orig_dtype, np.integer):
+            # clip out of range values for orig dtype
+            dtype_info = np.iinfo(orig_dtype)
+            img_stack = np.clip(img_stack, dtype_info.min, dtype_info.max)
+
+            # round and cast to original dtype
+            img_stack = np.round(img_stack).astype(orig_dtype)
+
+        elif np.issubdtype(orig_dtype, np.floating):
+            # floating point image, clamp to [0,1]
+            img_stack = np.clip(img_stack, 0.0, 1.0)
+            img_stack = img_stack.astype(orig_dtype)
 
     # Save outputs
     with preadator.ProcessManager(

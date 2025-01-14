@@ -50,7 +50,13 @@
       "type": "boolean",
       "description": "Preview the output images' names without actually running computation",
       "required": false
-    }
+    },
+    {
+        "name": "keepOrigDtype",
+        "type": "boolean",
+        "description": "Keep original image data type if true, otherwise convert to float",
+        "required": false
+      }
   ],
   "outputs": [
     {

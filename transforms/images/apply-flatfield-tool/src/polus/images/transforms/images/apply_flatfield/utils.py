@@ -1,9 +1,9 @@
 """Utilities for the apply flatfield plugin."""
-
 import logging
 import multiprocessing
 import os
 import pathlib
+import typing
 
 import bfio
 import numpy
@@ -13,7 +13,7 @@ POLUS_IMG_EXT = os.environ.get("POLUS_IMG_EXT", ".ome.tif")
 MAX_WORKERS = max(1, multiprocessing.cpu_count() // 2)
 
 
-def load_img(path: pathlib.Path, i: int) -> tuple[int, numpy.ndarray]:
+def load_img(path: pathlib.Path, i: int) -> typing.Tuple[int, numpy.ndarray]:
     """Load image from path.
 
     This method is intended to be used in a thread. The index is used to

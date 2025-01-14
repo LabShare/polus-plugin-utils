@@ -29,6 +29,10 @@ inputs:
     inputBinding:
       prefix: --preview
     type: boolean?
+  keepOrigDtype:
+    inputBinding:
+      prefix: --keepOrigDtype
+    type: boolean?
 outputs:
   outDir:
     outputBinding:
